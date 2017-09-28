@@ -107,6 +107,10 @@ public class TreeView implements SelectableTreeAction {
         }
     }
 
+    public void setOnTreeListener(OnTreeListener onTreeListener) {
+        adapter.setOnTreeListener(onTreeListener);
+    }
+
     @Override
     public void expandNode(TreeNode treeNode) {
         adapter.expandNode(treeNode);
