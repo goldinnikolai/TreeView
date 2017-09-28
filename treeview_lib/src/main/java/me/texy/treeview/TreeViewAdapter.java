@@ -36,6 +36,8 @@ import me.texy.treeview.helper.TreeHelper;
 
 public class TreeViewAdapter extends RecyclerView.Adapter {
 
+    private OnTreeListener onTreeListener;
+
     private Context context;
     /**
      * Tree root.
@@ -91,6 +93,10 @@ public class TreeViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    void setOnTreeListener(OnTreeListener onTreeListener) {
+        this.onTreeListener = onTreeListener;
+    }
+
     @Override
     public int getItemViewType(int position) {
         return expandedNodeList.get(position).getLevel();
@@ -124,12 +130,37 @@ public class TreeViewAdapter extends RecyclerView.Adapter {
                     }
                 });
             }
+
+            nodeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onTreeListener != null)
+                        onTreeListener.onItemClick(treeNode);
+                }
+            });
+            nodeView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onTreeListener != null)
+                        onTreeListener.onItemLongClick(treeNode);
+                    return true;
+                }
+            });
+
         } else if (treeNode.isItemClickEnable()) {
             nodeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onNodeToggled(treeNode);
                     viewBinder.onNodeToggled(treeNode, treeNode.isExpanded());
+                }
+            });
+            nodeView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onTreeListener != null)
+                        onTreeListener.onItemLongClick(treeNode);
+                    return true;
                 }
             });
         }
